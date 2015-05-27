@@ -24,7 +24,7 @@
 
     <groupId>org.jboss.spec.javax.sql</groupId>
     <artifactId>jboss-javax-sql-api_7.0_spec</artifactId>
-    <version>1.0.1.Final-SNAPSHOT</version>
+    <version>1.0.1.Final</version>
 
     <parent>
         <groupId>org.jboss</groupId>
