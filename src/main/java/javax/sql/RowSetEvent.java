@@ -25,37 +25,38 @@
 
 package javax.sql;
 
-import java.sql.*;
-
-
 /**
- * An object that provides support for distributed
- * transactions.  An <code>XAConnection</code> object  may be enlisted
- * in a distributed transaction by means of an <code>XAResource</code> object.
- * A transaction manager, usually part of a middle tier server, manages an
- * <code>XAConnection</code> object through the <code>XAResource</code> object.
+ * An <code>Event</code> object generated when an event occurs to a
+ * <code>RowSet</code> object.  A <code>RowSetEvent</code> object is
+ * generated when a single row in a rowset is changed, the whole rowset
+ * is changed, or the rowset cursor moves.
  * <P>
- * An application programmer does not use this interface directly; rather,
- * it is used by a transaction manager working in the middle tier server.
+ * When an event occurs on a <code>RowSet</code> object, one of the
+ * <code>RowSetListener</code> methods will be sent to all registered
+ * listeners to notify them of the event.  An <code>Event</code> object
+ * is supplied to the <code>RowSetListener</code> method so that the
+ * listener can use it to find out which <code>RowSet</code> object is
+ * the source of the event.
  *
  * @since 1.4
  */
 
-public interface XAConnection extends PooledConnection {
-
+public class RowSetEvent extends java.util.EventObject {
 
   /**
-   * Retrieves an <code>XAResource</code> object that
-   * the transaction manager will use
-   * to manage this <code>XAConnection</code> object's participation in a
-   * distributed transaction.
+   * Constructs a <code>RowSetEvent</code> object initialized with the
+   * given <code>RowSet</code> object.
    *
-   * @return the <code>XAResource</code> object
-   * @exception SQLException if a database access error occurs
-   * @exception SQLFeatureNotSupportedException if the JDBC driver does not support
-   * this method
-   * @since 1.4
+   * @param source the <code>RowSet</code> object whose data has changed or
+   *        whose cursor has moved
+   * @throws IllegalArgumentException if <code>source</code> is null.
    */
-  javax.transaction.xa.XAResource getXAResource() throws SQLException;
+  public RowSetEvent(RowSet source)
+    { super(source); }
 
- }
+  /**
+   * Private serial version unique ID to ensure serialization
+   * compatibility.
+   */
+  static final long serialVersionUID = -1875450876546332005L;
+}

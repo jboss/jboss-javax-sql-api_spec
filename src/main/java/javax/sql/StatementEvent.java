@@ -1,21 +1,31 @@
 /*
- * JBoss, Home of Professional Open Source.
- * Copyright 2015 Red Hat, Inc., and individual contributors
- * as indicated by the @author tags.
+ * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
+/*
+ * Created on Apr 28, 2005
+ */
 package javax.sql;
 
 import java.sql.PreparedStatement;
@@ -23,32 +33,85 @@ import java.sql.SQLException;
 import java.util.EventObject;
 
 /**
- * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
+ * A <code>StatementEvent</code> is sent to all <code>StatementEventListener</code>s which were
+ * registered with a <code>PooledConnection</code>. This occurs when the driver determines that a
+ * <code>PreparedStatement</code> that is associated with the <code>PooledConnection</code> has been closed or the driver determines
+ * is invalid.
+ * <p>
+ * @since 1.6
  */
 public class StatementEvent extends EventObject {
 
-    private static final long serialVersionUID = -8089573731826608315L;
+        private SQLException            exception;
+        private PreparedStatement       statement;
 
-    private final SQLException exception;
-    private final PreparedStatement statement;
+        /**
+         * Constructs a <code>StatementEvent</code> with the specified <code>PooledConnection</code> and
+         * <code>PreparedStatement</code>.  The <code>SQLException</code> contained in the event defaults to
+         * null.
+         * <p>
+         * @param con                   The <code>PooledConnection</code> that the closed or invalid
+         * <code>PreparedStatement</code>is associated with.
+         * @param statement             The <code>PreparedStatement</code> that is bieng closed or is invalid
+         * <p>
+         * @throws IllegalArgumentException if <code>con</code> is null.
+         *
+         * @since 1.6
+         */
+        public StatementEvent(PooledConnection con,
+                                                  PreparedStatement statement) {
 
-    public StatementEvent(final PooledConnection source, final PreparedStatement statement, final SQLException exception) {
-        super(source);
-        this.statement = statement;
-        this.exception = exception;
-    }
+                super(con);
 
-    public StatementEvent(final PooledConnection source, final PreparedStatement statement) {
-        super(source);
-        this.statement = statement;
-        this.exception = null;
-    }
+                this.statement = statement;
+                this.exception = null;
+        }
 
-    public PreparedStatement getStatement() {
-        return statement;
-    }
+        /**
+         * Constructs a <code>StatementEvent</code> with the specified <code>PooledConnection</code>,
+         * <code>PreparedStatement</code> and <code>SQLException</code>
+         * <p>
+         * @param con                   The <code>PooledConnection</code> that the closed or invalid <code>PreparedStatement</code>
+         * is associated with.
+         * @param statement             The <code>PreparedStatement</code> that is being closed or is invalid
+         * @param exception             The <code>SQLException </code>the driver is about to throw to
+         *                                              the application
+         *
+         * @throws IllegalArgumentException if <code>con</code> is null.
+         * <p>
+         * @since 1.6
+         */
+        public StatementEvent(PooledConnection con,
+                                                  PreparedStatement statement,
+                                                  SQLException exception) {
 
-    public SQLException getSQLException() {
-        return exception;
-    }
+                super(con);
+
+                this.statement = statement;
+                this.exception = exception;
+        }
+
+        /**
+         * Returns the <code>PreparedStatement</code> that is being closed or is invalid
+         * <p>
+         * @return      The <code>PreparedStatement</code> that is being closed or is invalid
+         * <p>
+         * @since 1.6
+         */
+        public PreparedStatement getStatement() {
+
+                return this.statement;
+        }
+
+        /**
+         * Returns the <code>SQLException</code> the driver is about to throw
+         * <p>
+         * @return      The <code>SQLException</code> the driver is about to throw
+         * <p>
+         * @since 1.6
+         */
+        public SQLException getSQLException() {
+
+                return this.exception;
+        }
 }
